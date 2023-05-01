@@ -25,9 +25,9 @@ def get_custom_amount(amount: int = 4000) -> str:
     try:
         data = requests.get(url=url, params=query_parameters, headers=headers).json()[0]
         sending_amount = data['sendingAmountWithoutCommission'] / 100
-        return f"Exchange Rate: {data['exchangeRate']}\n\nFor {amount}₾ you payed {get_pretty_amount(sending_amount)}₽"
+        return f"Exchange Rate: {data['exchangeRate']}\n\nPay {get_pretty_amount(sending_amount)}₽ for {amount}₾"
     except:
-        return "Wou wou wou, easy, enter sum less then 4900₾"
+        return "Wou wou wou, easy, enter sum less then 4950₾"
 
 
 def get_pretty_amount(amount) -> str:
