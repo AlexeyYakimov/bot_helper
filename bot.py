@@ -30,7 +30,6 @@ def get_webhook_url(ngrok_t, bot_t) -> str:
                                 headers={'Authorization': f"Bearer {ngrok_t}",
                                          'Ngrok-Version': "2"})
         url = response.json()["endpoints"][0]["public_url"]
-        app.logger('%s', url)
         return url + "/" + bot_t
     except:
         bot.send_message(utils.my_id, "ngrok down")
