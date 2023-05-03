@@ -43,7 +43,7 @@ def webhook():
     return 'ok', 200
 
 
-@app.route('/alert', method=['POST'])
+@app.route('/alert', methods=['POST'])
 def send_alert_to():
     try:
         if request.headers['Authorization'] == get_alert_token():
