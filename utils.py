@@ -1,4 +1,5 @@
 my_id = 228642352
+do_id = 85363124
 
 
 def remove_key_safe(dictionary: dict, key) -> bool:
@@ -7,3 +8,7 @@ def remove_key_safe(dictionary: dict, key) -> bool:
         return True
     except KeyError:
         return False
+
+
+def send_log_message(bot, tg_message, info: str):
+    bot.send_message(my_id, f"User {tg_message.chat.username}/{tg_message.chat.id} {info}")

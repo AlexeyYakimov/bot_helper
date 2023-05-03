@@ -7,8 +7,8 @@ from telebot.types import ReplyKeyboardMarkup, KeyboardButton
 
 import marine
 from korona_api import get_custom_amount
-from token_storage import get_bot_token, get_ngrok_token
-from utils import remove_key_safe, my_id
+from token_storage import get_bot_token, get_ngrok_token, get_alert_token
+from utils import remove_key_safe, my_id, send_log_message, do_id
 
 button_puk = 'Puk'
 button_weather = 'Weather'
@@ -29,7 +29,9 @@ def get_webhook_url(ngrok_t, bot_t) -> str:
         response = requests.get(url="https://api.ngrok.com/endpoints",
                                 headers={'Authorization': f"Bearer {ngrok_t}",
                                          'Ngrok-Version': "2"})
-        return response.json()["endpoints"][0]["public_url"] + "/" + bot_t
+        url = response.json()["endpoints"][0]["public_url"]
+        app.logger('%s', url)
+        return url + "/" + bot_t
     except:
         bot.send_message(my_id, "ngrok down")
 
@@ -39,6 +41,27 @@ def webhook():
     update = telebot.types.Update.de_json(request.stream.read().decode('utf-8'))
     bot.process_new_updates([update])
     return 'ok', 200
+
+
+@app.route('/alert', method=['POST'])
+def send_alert_to():
+    try:
+        if request.headers['Authorization'] == get_alert_token():
+            json_data = request.get_json()
+            id = json_data.get('id', None)
+            msg = json_data.get('msg')
+
+            if id is not None:
+                bot.send_message(id, msg)
+            else:
+                bot.send_message(do_id, msg)
+                bot.send_message(my_id, msg)
+
+            return {'success': "Alert successfully send"}, 200
+        else:
+            return {'error': "Sorry wrong token"}, 401
+    except:
+        return {'error': "Sorry, server temporary down:("}, 500
 
 
 @bot.message_handler(commands=['start'])
@@ -62,7 +85,7 @@ def weather_handler(message):
 
     bot.send_message(message.chat.id, get_custom_amount(int(message.text)), reply_markup=markup)
 
-    bot.send_message(my_id, f"User {message.chat.username} use Custom amount with {message.text}")
+    send_log_message(bot, message, f"use Custom amount with {message.text}")
 
 
 @bot.message_handler(content_types=['text'])
@@ -78,10 +101,10 @@ def text_handler(message):
             bot.send_message(message.chat.id,
                              data, reply_markup=markup)
 
-        bot.send_message(my_id, f"User {message.chat.username} use {message.text}")
+        send_log_message(bot, message, f"use {message.text}")
         remove_key_safe(in_memory_cash, message.chat.id)
     except:
-        bot.send_message(my_id, f"User {message.chat.username} cant use {message.text}")
+        send_log_message(bot, message, f"cant use {message.text}")
         bot.send_message(message.chat.id, "something went wrong!")
 
 
@@ -89,8 +112,9 @@ if __name__ == '__main__':
     bot_token = get_bot_token()
     ngrok_token = get_ngrok_token()
 
+    ngrok_url = get_webhook_url(ngrok_t=ngrok_token, bot_t=bot_token)
     bot.remove_webhook()
-    bot.set_webhook(url=get_webhook_url(ngrok_t=ngrok_token, bot_t=bot_token))
+    bot.set_webhook(url=ngrok_url)
 
-    bot.send_message(my_id, "Bot started")
+    bot.send_message(my_id, f"Bot started {ngrok_url} \n\n Alert: {get_alert_token()}")
     app.run(host='0.0.0.0', port=os.environ.get("PORT", 8081))
