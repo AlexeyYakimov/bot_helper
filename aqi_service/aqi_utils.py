@@ -41,5 +41,3 @@ def get_usaqi_description(aqi: int) -> AQI.Quality:
         result = AQI.Quality.MAROON
 
     return result
-
-print(get_usaqi_description(30))
