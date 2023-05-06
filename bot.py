@@ -119,7 +119,7 @@ def text_handler(message):
                          data, keyboard=markup)
 
         send_message(message.chat.id, "Stop writing to me, i don't understand it:)\n "
-                                      "Just push on the buttons under text message field.")
+                                      "Just push on the buttons under text message field.", markup)
 
         utils.send_log_message(bot, message, f"use {message.text}")
         utils.remove_key_safe(in_memory_cash, message.chat.id)
