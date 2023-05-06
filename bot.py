@@ -76,15 +76,26 @@ def start_handler(message):
     send_message(message.chat.id, "Hi", keyboard=markup)
 
 
-@bot.message_handler(func=lambda message: message.text == button_another_amount, content_types=['text'])
+@bot.message_handler(func=lambda message: message.text == button_weather, content_types=['text'])
 def weather_handler(message):
+    data = marine.get_data_message()
+    send_message(message.chat.id, data, keyboard=markup)
+
+
+@bot.message_handler(func=lambda message: message.text == button_puk, content_types=['text'])
+def money_handler(message):
+    send_message(message.chat.id, get_custom_amount(), keyboard=markup)
+
+
+@bot.message_handler(func=lambda message: message.text == button_another_amount, content_types=['text'])
+def another_amount_handler(message):
     in_memory_cash[message.chat.id] = message.chat.username
     send_message(message.chat.id, "Enter amount in lari ₾:", keyboard=markup)
 
 
 @bot.message_handler(func=lambda message: message.text.isdigit() and message.chat.id in in_memory_cash,
                      content_types=['text'])
-def weather_handler(message):
+def amount_handler(message):
     result = get_custom_amount(int(message.text))
 
     if 'Exchange Rate' in result:
@@ -96,28 +107,18 @@ def weather_handler(message):
 
 
 @bot.message_handler(func=lambda message: message.text == button_aqi, content_types=['text'])
-def aqi_message(message):
+def aqi_message_handler(message):
     send_message(message.chat.id, aqi_service.iquair_service.get_data(), keyboard=inline_keyboard)
 
 
 @bot.callback_query_handler(func=lambda call: call.data == 'aqi_description')
-def aqi_description(call):
+def aqi_description_handler(call):
     send_message(call.from_user.id, aqi_service.iquair_service.get_description(), keyboard=markup)
 
 
 @bot.message_handler(content_types=['text'])
 def text_handler(message):
     try:
-        if message.text == button_puk:
-            send_message(message.chat.id,
-                         get_custom_amount(),
-                         keyboard=markup)
-
-        if message.text == button_weather:
-            data = marine.get_data_message()
-            send_message(message.chat.id,
-                         data, keyboard=markup)
-
         send_message(message.chat.id, "Stop writing to me, i don't understand it:)\n"
                                       "Just push on the buttons under text message field.", markup)
 
@@ -129,7 +130,12 @@ def text_handler(message):
 
 
 def send_message(chat_id, data, keyboard=None):
-    bot.send_message(chat_id=chat_id, text=data, reply_markup=keyboard, parse_mode='HTML')
+    try:
+        bot.send_message(chat_id=chat_id, text=data, reply_markup=keyboard, parse_mode='HTML')
+    except:
+        bot.send_message(chat_id=utils.my_id, text=f"Cant send message for {chat_id} with data {data}")
+    finally:
+        print(f"Cant send message for {chat_id} with data {data}")
 
 
 if __name__ == '__main__':
