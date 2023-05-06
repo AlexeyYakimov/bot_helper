@@ -40,7 +40,7 @@ def get_webhook_url(ngrok_t, bot_t) -> str:
         url = response.json()["endpoints"][0]["public_url"]
         return url + "/" + bot_t
     except:
-        bot.send_message(utils.my_id, "ngrok down")
+        send_message(utils.my_id, "ngrok down")
 
 
 @app.route('/' + get_bot_token(), methods=['POST'])
@@ -59,10 +59,10 @@ def send_alert_to():
             msg = json_data.get('msg')
 
             if id is not None:
-                bot.send_message(id, msg)
+                send_message(id, msg)
             else:
-                bot.send_message(utils.do_id, msg)
-                bot.send_message(utils.my_id, msg)
+                send_message(utils.do_id, msg)
+                send_message(utils.my_id, msg)
 
             return {'success': "Alert successfully send"}, 200
         else:
@@ -73,13 +73,13 @@ def send_alert_to():
 
 @bot.message_handler(commands=['start'])
 def start_handler(message):
-    bot.send_message(message.chat.id, "Hi", reply_markup=markup)
+    send_message(message.chat.id, "Hi", keyboard=markup)
 
 
 @bot.message_handler(func=lambda message: message.text == button_another_amount, content_types=['text'])
 def weather_handler(message):
     in_memory_cash[message.chat.id] = message.chat.username
-    bot.send_message(message.chat.id, "Enter amount in lari ₾:", reply_markup=markup)
+    send_message(message.chat.id, "Enter amount in lari ₾:", keyboard=markup)
 
 
 @bot.message_handler(func=lambda message: message.text.isdigit() and message.chat.id in in_memory_cash,
@@ -90,39 +90,43 @@ def weather_handler(message):
     if 'Exchange Rate' in result:
         utils.remove_key_safe(in_memory_cash, message.chat.id)
 
-    bot.send_message(message.chat.id, get_custom_amount(int(message.text)), reply_markup=markup)
+    send_message(message.chat.id, get_custom_amount(int(message.text)), keyboard=markup)
 
     utils.send_log_message(bot, message, f"use Custom amount with {message.text}")
 
 
 @bot.message_handler(func=lambda message: message.text == button_aqi, content_types=['text'])
 def aqi_message(message):
-    bot.send_message(message.chat.id, aqi_service.iquair_service.get_data(), reply_markup=inline_keyboard, parse_mode='HTML')
+    send_message(message.chat.id, aqi_service.iquair_service.get_data(), keyboard=inline_keyboard)
 
 
 @bot.callback_query_handler(func=lambda call: call.data == 'aqi_description')
 def aqi_description(call):
-    bot.send_message(call.from_user.id, aqi_service.iquair_service.get_description(), reply_markup=markup, parse_mode='HTML')
+    send_message(call.from_user.id, aqi_service.iquair_service.get_description(), keyboard=markup)
 
 
 @bot.message_handler(content_types=['text'])
 def text_handler(message):
     try:
         if message.text == button_puk:
-            bot.send_message(message.chat.id,
-                             get_custom_amount(),
-                             reply_markup=markup)
+            send_message(message.chat.id,
+                         get_custom_amount(),
+                         keyboard=markup)
 
         if message.text == button_weather:
             data = marine.get_data_message()
-            bot.send_message(message.chat.id,
-                             data, reply_markup=markup)
+            send_message(message.chat.id,
+                         data, keyboard=markup)
 
         utils.send_log_message(bot, message, f"use {message.text}")
         utils.remove_key_safe(in_memory_cash, message.chat.id)
     except:
         utils.send_log_message(bot, message, f"cant use {message.text}")
-        bot.send_message(message.chat.id, "something went wrong!")
+        send_message(message.chat.id, "something went wrong!")
+
+
+def send_message(chat_id, data, keyboard=None):
+    bot.send_message(chat_id=chat_id, text=data, reply_markup=keyboard, parse_mode='HTML')
 
 
 if __name__ == '__main__':
@@ -133,5 +137,5 @@ if __name__ == '__main__':
     bot.remove_webhook()
     bot.set_webhook(url=ngrok_url)
 
-    bot.send_message(utils.my_id, f"Bot started {ngrok_url} \n\n Alert: {get_alert_token()}")
+    send_message(utils.my_id, f"Bot started {ngrok_url} \n\n Alert: {get_alert_token()}")
     app.run(host='0.0.0.0', port=os.environ.get("PORT", 8081))
