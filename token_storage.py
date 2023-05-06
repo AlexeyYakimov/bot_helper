@@ -1,3 +1,5 @@
+import os
+
 _token_dict = {}
 
 
@@ -37,9 +39,19 @@ def get_alert_token() -> str:
     return token
 
 
+def get_iqair_token() -> str:
+    _read_file()
+    if len(_token_dict['iqair']) != 0:
+        token = _token_dict['iqair']
+    else:
+        raise Exception("Provide your iqair token in file with cold api_keys")
+    return token
+
+
 def _read_file():
     if len(_token_dict) == 0:
-        file = open('api_keys').readlines()
+        ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+        file = open(f'{ROOT_DIR}/api_keys').readlines()
         for line in file:
             pair = line.split("=")
             key = pair[0]

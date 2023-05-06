@@ -3,9 +3,11 @@ import os
 from flask import Flask, request
 import telebot
 import requests
+from telebot import types
 from telebot.types import ReplyKeyboardMarkup, KeyboardButton
 
 import marine
+import aqi_service.iquair_service
 from korona_api import get_custom_amount
 from token_storage import get_bot_token, get_ngrok_token, get_alert_token
 import utils
@@ -13,10 +15,16 @@ import utils
 button_puk = 'Puk'
 button_weather = 'Weather'
 button_another_amount = 'Enter custom amount'
+button_aqi = "AQI Batumi"
 
 markup = ReplyKeyboardMarkup(resize_keyboard=True)
 markup.add(KeyboardButton(button_puk), KeyboardButton(button_weather))
-markup.add(KeyboardButton(button_another_amount))
+markup.add(KeyboardButton(button_another_amount), KeyboardButton(button_aqi))
+
+aqi_description_inline_btn = types.InlineKeyboardButton(text='Aqi description',
+                                                        callback_data="aqi_description")
+inline_keyboard = types.InlineKeyboardMarkup()
+inline_keyboard.add(aqi_description_inline_btn)
 
 app = Flask(__name__)
 bot = telebot.TeleBot(token=get_bot_token())
@@ -85,6 +93,16 @@ def weather_handler(message):
     bot.send_message(message.chat.id, get_custom_amount(int(message.text)), reply_markup=markup)
 
     utils.send_log_message(bot, message, f"use Custom amount with {message.text}")
+
+
+@bot.message_handler(func=lambda message: message.text == button_aqi, content_types=['text'])
+def aqi_message(message):
+    bot.send_message(message.chat.id, aqi_service.iquair_service.get_data(), reply_markup=inline_keyboard, parse_mode='HTML')
+
+
+@bot.callback_query_handler(func=lambda call: call.data == 'aqi_description')
+def aqi_description(call):
+    bot.send_message(call.from_user.id, aqi_service.iquair_service.get_description(), reply_markup=markup, parse_mode='HTML')
 
 
 @bot.message_handler(content_types=['text'])

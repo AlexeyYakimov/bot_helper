@@ -2,12 +2,10 @@ import arrow
 import requests
 
 from token_storage import get_stormglass_token
-
-TZ = 'Asia/Tbilisi'
-TZ_UTC = 'UTC'
+from utils import TZ_GE, TZ_UTC
 
 temp = {}
-prev_run_time = arrow.now(TZ).floor('day')
+prev_run_time = arrow.now(TZ_GE).floor('day')
 shift_time = 2
 can_do_request = True
 
@@ -21,14 +19,14 @@ def get_data_message() -> str:
 
 
 def windowed_data() -> dict:
-    start_time = arrow.now(TZ).floor('hours').datetime
-    end_time = arrow.now(TZ).floor('hours').shift(hours=shift_time).datetime
+    start_time = arrow.now(TZ_GE).floor('hours').datetime
+    end_time = arrow.now(TZ_GE).floor('hours').shift(hours=shift_time).datetime
     data = get_data()['hours']
     window_dict = {'hours': []}
     hour_list = []
 
     for day in data:
-        time = arrow.get(day['time']).to(TZ).datetime
+        time = arrow.get(day['time']).to(TZ_GE).datetime
         if start_time.timestamp() <= time.timestamp() <= end_time.timestamp():
             hour_list.append(day)
 
@@ -38,7 +36,7 @@ def windowed_data() -> dict:
 
 def get_data() -> dict:
     global prev_run_time, temp, can_do_request
-    current_time = arrow.now(TZ)
+    current_time = arrow.now(TZ_GE)
 
     try:
         meta_data = temp['meta']
@@ -51,8 +49,8 @@ def get_data() -> dict:
 
     run = current_time.timestamp() > prev_run_time.shift(hours=shift_time).timestamp() and can_do_request
     if run or len(temp) == 0:
-        start_time = arrow.now(tz=TZ).floor('day').to(TZ_UTC).timestamp()
-        end_time = arrow.now(tz=TZ).ceil('day').to(TZ_UTC).timestamp()
+        start_time = arrow.now(tz=TZ_GE).floor('day').to(TZ_UTC).timestamp()
+        end_time = arrow.now(tz=TZ_GE).ceil('day').to(TZ_UTC).timestamp()
 
         try:
             response = requests.get(
@@ -88,7 +86,7 @@ def convert_data_to_str(data: dict) -> str:
         res_list = []
 
         for day_dict in hours_list:
-            time = arrow.get(day_dict['time']).to(TZ).datetime.strftime('%H:%M')
+            time = arrow.get(day_dict['time']).to(TZ_GE).datetime.strftime('%H:%M')
             res_list.append(f"On: {time}")
             wave_height = day_dict['waveHeight']['sg']
             res_list.append(f"Wave height: {wave_height}m")
