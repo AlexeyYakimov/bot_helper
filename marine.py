@@ -87,7 +87,7 @@ def convert_data_to_str(data: dict) -> str:
 
         for day_dict in hours_list:
             time = arrow.get(day_dict['time']).to(TZ_GE).datetime.strftime('%H:%M')
-            res_list.append(f"On: {time}")
+            res_list.append(f"<b>At: {time}</b>")
             wave_height = day_dict['waveHeight']['sg']
             res_list.append(f"Wave height: {wave_height}m")
             air_temp = day_dict['airTemperature']['sg']
