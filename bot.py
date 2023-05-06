@@ -137,9 +137,10 @@ def send_message(chat_id, data, keyboard=None):
 
         utils.remove_key_safe(in_memory_cash, chat_id)
     except:
-        bot.send_message(chat_id=utils.my_id, text=f"Cant send message for {chat_id} with data {data}")
-    finally:
-        print(f"Cant send message for {chat_id} with data {data}")
+        try:
+            bot.send_message(chat_id=utils.my_id, text=f"Cant send message for {chat_id} with data {data}")
+        except:
+            print(f"Cant send message for {chat_id} with data {data}")
 
 
 if __name__ == '__main__':
