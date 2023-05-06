@@ -31,7 +31,7 @@ def get_data() -> str:
         result = cached_value
 
     aqi_type = get_usaqi_description(cached_value)
-    return f"<b>Now in Batumi AQI:</b> {result} {AQI.colors[aqi_type]} <i>{aqi_type}</i>"
+    return f"<b>Now in Batumi AQI:</b> {result} <i>{AQI.colors[aqi_type]}</i>"
 
 
 def get_description() -> str:

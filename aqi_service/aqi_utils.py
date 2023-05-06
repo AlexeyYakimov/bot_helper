@@ -26,12 +26,12 @@ class AQI:
     }
 
     colors = {
-        Quality.GREEN: "🟢",
-        Quality.YELLOW: "🟡",
-        Quality.ORANGE: "🟠",
-        Quality.RED: "🔴",
-        Quality.PURPLE: "🟣",
-        Quality.MAROON: "🟤",
+        Quality.GREEN: "🟢 Good",
+        Quality.YELLOW: "🟡 Moderate",
+        Quality.ORANGE: "🟠 Unhealthy for Sensitive Groups",
+        Quality.RED: "🔴 Unhealthy",
+        Quality.PURPLE: "🟣 Very Unhealthy",
+        Quality.MAROON: "🟤 Hazardous",
     }
 
 
