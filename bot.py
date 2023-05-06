@@ -118,7 +118,7 @@ def text_handler(message):
             send_message(message.chat.id,
                          data, keyboard=markup)
 
-        send_message(message.chat.id, "Stop writing to me, i don't understand it:)\n "
+        send_message(message.chat.id, "Stop writing to me, i don't understand it:)\n"
                                       "Just push on the buttons under text message field.", markup)
 
         utils.send_log_message(bot, message, f"use {message.text}")
