@@ -1,7 +1,7 @@
 import requests
 import arrow
 
-from aqi_service.aqi_utils import get_usaqi_description
+from aqi_service.aqi_utils import get_usaqi_description, AQI
 from token_storage import get_iqair_token
 from utils import TZ_GE
 
@@ -30,8 +30,10 @@ def get_data() -> str:
     except:
         result = cached_value
 
-    return f"<b>Now in Batumi AQI:</b> {result} <i>{get_usaqi_description(cached_value)}</i>"
+    aqi_type = get_usaqi_description(cached_value)
+    return f"<b>Now in Batumi AQI:</b> {result} {AQI.colors[aqi_type]} <i>{aqi_type}</i>"
 
 
 def get_description() -> str:
-    return f"<b>Description for AQI <i>{cached_value}</i>:</b> \n<i>{get_usaqi_description(cached_value).value}</i>"
+    aqi_type = get_usaqi_description(cached_value)
+    return f"<b>Description for AQI <i>{cached_value}</i> {AQI.colors[aqi_type]}:</b> \n<i>{aqi_type.value}</i>"

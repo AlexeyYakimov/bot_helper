@@ -25,6 +25,15 @@ class AQI:
         Quality.MAROON: range(301, 2000)
     }
 
+    colors = {
+        Quality.GREEN: "🟢",
+        Quality.YELLOW: "🟡",
+        Quality.ORANGE: "🟠",
+        Quality.RED: "🔴",
+        Quality.PURPLE: "🟣",
+        Quality.MAROON: "🟤",
+    }
+
 
 def get_usaqi_description(aqi: int) -> AQI.Quality:
     if aqi in AQI.ranges[AQI.Quality.GREEN]:
