@@ -15,3 +15,7 @@ def remove_key_safe(dictionary: dict, key) -> bool:
 
 def send_log_message(bot, tg_message, info: str):
     bot.send_message(my_id, f"User {tg_message.chat.username}/{tg_message.chat.id} {info}")
+
+
+def send_log_message_call(bot, call, info: str):
+    bot.send_message(my_id, f"User {call.from_user.id} {info}")
