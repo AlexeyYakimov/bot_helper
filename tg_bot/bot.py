@@ -1,8 +1,7 @@
 import telebot
 from telebot import TeleBot
 
-import utils
-from token_storage import get_bot_token
+from utils.token_storage import get_bot_token
 
 bot: TeleBot = telebot.TeleBot(token=get_bot_token())
 

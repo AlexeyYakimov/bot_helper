@@ -3,5 +3,3 @@ do_id = 85363124
 
 TZ_GE = 'Asia/Tbilisi'
 TZ_UTC = 'UTC'
-
-
