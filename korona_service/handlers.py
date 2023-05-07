@@ -16,13 +16,17 @@ def custom_amount_handler(message):
 
 
 def amount_handler(message):
-    if int(message.text) > max_lari_cap:
-        main_bot.register_next_step_handler(message, amount_handler)
-        bot.send_message(message.chat.id, get_custom_amount(int(message.text)))
-    else:
-        bot.send_message(message.chat.id, get_custom_amount(int(message.text)), keyboard=bot.get_reply_keyboard())
+    try:
+        if int(message.text) > max_lari_cap:
+            main_bot.register_next_step_handler(message, amount_handler)
+            bot.send_message(message.chat.id, get_custom_amount(int(message.text)))
+        else:
+            bot.send_message(message.chat.id, get_custom_amount(int(message.text)), keyboard=bot.get_reply_keyboard())
 
-    bot.send_log_message(message, f"use Custom amount with {message.text}")
+        bot.send_log_message(message, f"use Custom amount with {message.text}")
+    except:
+        main_bot.register_next_step_handler(message, amount_handler)
+        bot.send_message(message.chat.id, f"Enter only numbers less than {max_lari_cap}₾")
 
 
 def register_handlers():
