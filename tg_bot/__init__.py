@@ -1,6 +1,6 @@
 from telebot.types import ReplyKeyboardMarkup, InlineKeyboardMarkup
 
-from tg_bot import bot
+from tg_bot import bot, handlers
 from tg_bot import keyboards
 from tg_bot.keyboards import aqi_btn, puk_btn, inline_aqi_btn, weather_btn, custom_amount_btn
 
@@ -23,3 +23,7 @@ def get_reply_keyboard() -> ReplyKeyboardMarkup:
 
 def get_inline_keyboard() -> InlineKeyboardMarkup():
     return keyboards.get_inline_keyboard()
+
+
+def register_handlers():
+    handlers.register_handlers()
