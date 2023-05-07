@@ -1,8 +1,8 @@
 import arrow
 import requests
 
-from token_storage import get_stormglass_token
-from utils import TZ_GE, TZ_UTC
+from utils.token_storage import get_stormglass_token
+from utils.global_utils import TZ_GE, TZ_UTC
 
 temp = {}
 prev_run_time = arrow.now(TZ_GE).floor('day')

@@ -8,7 +8,7 @@ def get_bot_token() -> str:
     if len(_token_dict['bot']) != 0:
         token = _token_dict['bot']
     else:
-        raise Exception("Provide your bot token in file with cold api_keys")
+        raise Exception("Provide your tg_bot token in file with cold api_keys")
     return token
 
 
