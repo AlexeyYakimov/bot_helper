@@ -6,10 +6,11 @@ from telebot.types import ReplyKeyboardMarkup, KeyboardButton
 
 import aqi_service.handlers
 import in_memory_cache
+import korona_service
 import marine
 import tg_bot
 import utils
-from korona_api import get_custom_amount
+from korona_service.korona_api import get_custom_amount
 from token_storage import get_bot_token, get_ngrok_token, get_alert_token
 
 button_puk = 'Puk'
@@ -72,6 +73,7 @@ def send_alert_to():
 
 
 aqi_service.register_handlers()
+korona_service.register_handlers()
 
 
 # @tg_bot.bot.bot.message_handler(commands=['start'])
@@ -90,42 +92,18 @@ def weather_handler(message):
     tg_bot.send_log_message(message, f"use {message.text}")
 
 
-@tg_bot.bot.bot.message_handler(func=lambda message: message.text == button_puk, content_types=['text'])
-def money_handler(message):
-    send_message(message.chat.id, get_custom_amount(), keyboard=markup)
-    tg_bot.send_log_message(message, f"use {message.text}")
 
-
-@tg_bot.bot.bot.message_handler(func=lambda message: message.text == button_another_amount, content_types=['text'])
-def another_amount_handler(message):
-    in_memory_cash[message.chat.id] = message.chat.username
-    send_message(message.chat.id, "Enter amount in lari ₾:", keyboard=markup)
-    tg_bot.send_log_message(message, f"use {message.text}")
-
-
-@tg_bot.bot.bot.message_handler(func=lambda message: message.text.isdigit() and message.chat.id in in_memory_cash,
-                                content_types=['text'])
-def amount_handler(message):
-    result = get_custom_amount(int(message.text))
-
-    if 'Exchange Rate' in result:
-        in_memory_cache.remove_key(message.chat.id)
-
-    send_message(message.chat.id, get_custom_amount(int(message.text)), keyboard=markup)
-
-    tg_bot.send_log_message(message, f"use Custom amount with {message.text}")
-
-
-# @bot.message_handler(func=lambda message: message.text == button_aqi, content_types=['text'])
-# def aqi_message_handler(message):
-#     send_message(message.chat.id, aqi_service.iquair_service.get_data(), keyboard=inline_keyboard)
-#     tg_bot.send_log_message(bot, message, f"use {message.text}")
+# @tg_bot.bot.bot.message_handler(func=lambda message: message.text.isdigit() and message.chat.id in in_memory_cash,
+#                                 content_types=['text'])
+# def amount_handler(message):
+#     result = get_custom_amount(int(message.text))
 #
-# @bot.callback_query_handler(func=lambda call: call.data == 'aqi_description')
-# def aqi_description_handler(call):
-#     send_message(call.from_user.id, aqi_service.iquair_service.get_description(), keyboard=markup)
-#     tg_bot.send_log_message_call(bot, call, f"use {call.data}")
-
+#     if 'Exchange Rate' in result:
+#         in_memory_cache.remove_key(message.chat.id)
+#
+#     send_message(message.chat.id, get_custom_amount(int(message.text)), keyboard=markup)
+#
+#     tg_bot.send_log_message(message, f"use Custom amount with {message.text}")
 
 @tg_bot.bot.bot.message_handler(content_types=['text'])
 def text_handler(message):
