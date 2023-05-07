@@ -6,7 +6,6 @@ import tg_bot
 import weather_service
 from server.api_server import flask_app
 
-
 aqi_service.register_handlers()
 korona_service.register_handlers()
 weather_service.register_handlers()
