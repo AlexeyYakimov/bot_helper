@@ -5,12 +5,10 @@ from telebot import types
 from telebot.types import ReplyKeyboardMarkup, KeyboardButton
 
 import aqi_service.handlers
-import in_memory_cache
 import korona_service
 import marine
 import tg_bot
 import utils
-from korona_service.korona_api import get_custom_amount
 from token_storage import get_bot_token, get_ngrok_token, get_alert_token
 
 button_puk = 'Puk'
@@ -92,7 +90,6 @@ def weather_handler(message):
     tg_bot.send_log_message(message, f"use {message.text}")
 
 
-
 # @tg_bot.bot.bot.message_handler(func=lambda message: message.text.isdigit() and message.chat.id in in_memory_cash,
 #                                 content_types=['text'])
 # def amount_handler(message):
@@ -119,7 +116,6 @@ def send_message(chat_id, data, keyboard=None):
     try:
         tg_bot.bot.bot.send_message(chat_id=chat_id, text=data, reply_markup=keyboard, parse_mode='HTML')
 
-        in_memory_cache.remove_key(chat_id)
     except:
         try:
             tg_bot.bot.bot.send_message(chat_id=utils.my_id, text=f"Cant send message for {chat_id} with data {data}")

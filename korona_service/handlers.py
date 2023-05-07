@@ -1,4 +1,3 @@
-import in_memory_cache as cache
 import tg_bot as bot
 from korona_service.korona_api import get_custom_amount, max_lari_cap
 from tg_bot import custom_amount_btn, puk_btn
@@ -10,7 +9,6 @@ def money_handler(message):
 
 
 def custom_amount_handler(message):
-    cache.add_item(message.chat.id, message.chat.username)
     bot.send_message(message.chat.id, "Enter amount in lari ₾:", keyboard=bot.get_reply_keyboard())
     bot.send_log_message(message, f"use {message.text}")
     bot.bot.bot.register_next_step_handler(message, amount_handler)
