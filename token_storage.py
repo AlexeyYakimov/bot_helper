@@ -8,7 +8,7 @@ def get_bot_token() -> str:
     if len(_token_dict['bot']) != 0:
         token = _token_dict['bot']
     else:
-        raise Exception("Provide your bot token in file with cold api_keys")
+        raise Exception("Provide your tg_bot token in file with cold api_keys")
     return token
 
 
@@ -51,7 +51,7 @@ def get_iqair_token() -> str:
 def _read_file():
     if len(_token_dict) == 0:
         ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-        file = open(f'{ROOT_DIR}/api_keys').readlines()
+        file = open(f'{ROOT_DIR}/tokens').readlines()
         for line in file:
             pair = line.split("=")
             key = pair[0]
