@@ -5,7 +5,7 @@ from tg_bot import bot
 from utils.global_utils import do_id, my_id
 from utils.token_storage import get_bot_token, get_alert_token
 
-bot_api_routes = Blueprint('simple_page', __name__)
+bot_api_routes = Blueprint('telegram_api', __name__)
 
 
 @bot_api_routes.post('/' + get_bot_token())
@@ -33,4 +33,4 @@ def send_alert_to():
         else:
             return {'error': "Sorry wrong token"}, 401
     except:
-        return {'error': "Sorry, server temporary down:("}, 500
+        return {'error': "Provide correct API token"}, 401
