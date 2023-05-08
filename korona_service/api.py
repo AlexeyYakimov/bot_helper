@@ -1,6 +1,7 @@
 from flask import Blueprint, request
 
 from korona_service.korona_api import get_rate_for
+from utils.token_storage import Token, get_token
 
 korona_api_routes = Blueprint('korona_api', __name__, url_prefix='/v1/exchange')
 
@@ -9,7 +10,7 @@ korona_api_routes = Blueprint('korona_api', __name__, url_prefix='/v1/exchange')
 def corona_course():
     try:
         # TODO add API token
-        if request.headers['Authorization'] == "":
+        if request.headers['Authorization'] == get_token(Token.API):
             query = request.args
             amount = query.get("amount")
 
