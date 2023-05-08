@@ -1,8 +1,8 @@
 import arrow
 import requests
 
-from utils.token_storage import get_stormglass_token
 from utils.global_utils import TZ_GE, TZ_UTC
+from utils.token_storage import get_token, Token
 
 temp = {}
 prev_run_time = arrow.now(TZ_GE).floor('day')
@@ -64,7 +64,7 @@ def get_data() -> dict:
                     'end': end_time
                 },
                 headers={
-                    'Authorization': get_stormglass_token()
+                    'Authorization': get_token(Token.STORMGLASS)
                 }
             ).json()
             temp = response

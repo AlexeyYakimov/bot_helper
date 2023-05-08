@@ -2,9 +2,9 @@ import telebot
 from telebot import TeleBot
 
 from utils.global_utils import my_id
-from utils.token_storage import get_bot_token
+from utils.token_storage import Token, get_token
 
-bot: TeleBot = telebot.TeleBot(token=get_bot_token())
+bot: TeleBot = telebot.TeleBot(token=get_token(Token.TELEGRAM))
 
 
 def send_message(chat_id, data, keyboard=None):

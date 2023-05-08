@@ -1,11 +1,11 @@
-import requests
 import arrow
+import requests
 
 from aqi_service.aqi_utils import get_usaqi_description, AQI
-from utils.token_storage import get_iqair_token
 from utils.global_utils import TZ_GE
+from utils.token_storage import Token, get_token
 
-url = f"https://api.airvisual.com/v2/city?key={get_iqair_token()}&country=Georgia&state=Ajaria&city=Batumi"
+url = f"https://api.airvisual.com/v2/city?key={get_token(Token.AQI)}&country=Georgia&state=Ajaria&city=Batumi"
 
 last_request = arrow.now(TZ_GE)
 cached_value = 0
