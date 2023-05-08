@@ -9,7 +9,6 @@ korona_api_routes = Blueprint('korona_api', __name__, url_prefix='/v1/exchange')
 @korona_api_routes.get('/korona-rates')
 def corona_course():
     try:
-        # TODO add API token
         if request.headers['Authorization'] == get_token(Token.API):
             query = request.args
             amount = query.get("amount")
