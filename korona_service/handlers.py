@@ -2,6 +2,7 @@ import tg_bot as bot
 from korona_service.korona_api import get_custom_amount, max_lari_cap
 from tg_bot import custom_amount_btn, puk_btn
 from tg_bot.bot import bot as main_bot
+from tg_bot.keyboards import message_match_button
 
 
 def money_handler(message):
@@ -27,9 +28,9 @@ def amount_handler(message):
 
 
 def register_handlers():
-    main_bot.register_message_handler(money_handler, func=lambda message: message.text == puk_btn,
+    main_bot.register_message_handler(money_handler, func=lambda message: message_match_button(message.text, puk_btn),
                                       content_types=['text'])
 
     main_bot.register_message_handler(custom_amount_handler,
-                                      func=lambda message: message.text == custom_amount_btn,
+                                      func=lambda message: message_match_button(message.text, custom_amount_btn),
                                       content_types=['text'])

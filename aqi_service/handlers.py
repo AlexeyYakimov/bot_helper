@@ -1,6 +1,7 @@
 import tg_bot as bot
 from aqi_service import iquair_service as aqi
 from tg_bot import aqi_btn, inline_aqi_btn
+from tg_bot.keyboards import message_match_button
 
 
 def aqi_message_handler(message):
@@ -13,8 +14,8 @@ def aqi_description_handler(call):
 
 def register_handlers():
     bot.bot.bot.register_message_handler(aqi_message_handler,
-                                         func=lambda message: message.text == aqi_btn,
+                                         func=lambda message: message_match_button(message.text, aqi_btn),
                                          content_types=['text'])
 
     bot.bot.bot.register_callback_query_handler(aqi_description_handler,
-                                                func=lambda call: call.data == inline_aqi_btn)
+                                                func=lambda call: message_match_button(call.data, inline_aqi_btn))

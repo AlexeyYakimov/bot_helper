@@ -1,8 +1,6 @@
 from tg_bot import bot, keyboards
 
 
-# @tg_bot.bot.bot.message_handler(content_types=['text'])
-
 def start_handler(tbot, message):
     tbot.send_message(chat_id=message.chat.id, text="Hi registered", reply_markup=keyboards.get_reply_keyboard())
 

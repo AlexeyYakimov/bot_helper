@@ -17,6 +17,10 @@ inline_keyboard = types.InlineKeyboardMarkup()
 inline_keyboard.add(aqi_description_inline_btn)
 
 
+def message_match_button(message: str, button: str) -> bool:
+    return message.lower() == button.lower()
+
+
 def get_reply_keyboard() -> types.ReplyKeyboardMarkup:
     return markup
 
