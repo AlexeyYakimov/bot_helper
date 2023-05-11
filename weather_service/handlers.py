@@ -7,7 +7,6 @@ from weather_service import marine_api
 def weather_handler(message):
     data = marine_api.get_data_message()
     bot.send_message(message.chat.id, data, keyboard=bot.get_reply_keyboard())
-    bot.send_log_message(message, f"use {message.text}")
 
 
 def register_handlers():

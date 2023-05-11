@@ -13,7 +13,6 @@ def all_text_handler(message):
                                           "Just push on the buttons under text message field.",
                          keyboard=keyboards.get_reply_keyboard())
     except:
-        bot.send_log_message(message, f"cant use {message.text}")
         bot.send_message(message.chat.id, "something went wrong!")
 
 

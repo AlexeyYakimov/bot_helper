@@ -13,14 +13,6 @@ def send_message(chat_id, data, keyboard=None):
     bot.send_message(chat_id, data, keyboard)
 
 
-def send_log_message(tg_message, info: str):
-    bot.send_log_message(tg_message, info)
-
-
-def send_log_message_call(call, info: str):
-    bot.send_log_message_call(call, info)
-
-
 def get_reply_keyboard() -> ReplyKeyboardMarkup:
     return keyboards.get_reply_keyboard()
 
