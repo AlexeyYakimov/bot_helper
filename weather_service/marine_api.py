@@ -3,8 +3,9 @@ import requests
 
 from utils.global_utils import TZ_GE, TZ_UTC
 from utils.token_storage import get_token, Token
+from weather_service.utils import get_cloud_coverage, map_to_weather_data, get_rounded_time
 
-temp = {}
+temp = {'hours': []}
 prev_run_time = arrow.now(TZ_GE).floor('day')
 shift_time = 2
 can_do_request = True
@@ -14,24 +15,36 @@ lat = 41.6410
 lng = 41.6142
 
 
-def get_data_message() -> str:
-    return convert_data_to_str(windowed_data())
+def get_formatted_tg_message() -> str:
+    return convert_data_to_str(get_data_for_three_hours())
 
 
-def windowed_data() -> dict:
+def get_current_weather() -> dict:
+    data = get_data()['hours']
+    result = {}
+    for hour in data:
+        weather_time = arrow.get(hour['time'])
+        current_time = arrow.now(TZ_GE)
+
+        if weather_time.date().day == current_time.date().day and get_rounded_time(weather_time, current_time):
+            result = map_to_weather_data(hour)
+
+    return result
+
+
+def get_data_for_three_hours() -> list:
     start_time = arrow.now(TZ_GE).floor('hours').datetime
     end_time = arrow.now(TZ_GE).floor('hours').shift(hours=shift_time).datetime
     data = get_data()['hours']
-    window_dict = {'hours': []}
+
     hour_list = []
 
-    for day in data:
-        time = arrow.get(day['time']).to(TZ_GE).datetime
+    for hour in data:
+        time = arrow.get(hour['time']).datetime
         if start_time.timestamp() <= time.timestamp() <= end_time.timestamp():
-            hour_list.append(day)
+            hour_list.append(map_to_weather_data(hour))
 
-    window_dict['hours'] = hour_list
-    return window_dict
+    return hour_list
 
 
 def get_data() -> dict:
@@ -67,41 +80,51 @@ def get_data() -> dict:
                     'Authorization': get_token(Token.STORMGLASS)
                 }
             ).json()
+
             temp = response
             print(response)
             prev_run_time = current_time.shift(hours=shift_time)
-
             response = temp
         except:
             response = temp
     else:
         response = temp
 
+    for time in response['hours']:
+        time_ge = arrow.get(time['time']).to(TZ_GE)
+        time['time'] = time_ge.format('YYYY-MM-DD HH:mm')
+
     return response
 
 
-def convert_data_to_str(data: dict) -> str:
+def convert_data_to_str(data: list) -> str:
     try:
-        hours_list = data['hours']
         res_list = []
 
-        for day_dict in hours_list:
-            time = arrow.get(day_dict['time']).to(TZ_GE).datetime.strftime('%H:%M')
+        for day_dict in data:
+            time = arrow.get(day_dict['time']).datetime.strftime('%H:%M')
             res_list.append(f"<b>At: {time}</b>")
-            wave_height = day_dict['waveHeight']['sg']
-            res_list.append(f"Wave height: {wave_height}m")
-            air_temp = day_dict['airTemperature']['sg']
-            res_list.append(f"Air temp: {int(air_temp)} C˚")
-            water_temp = day_dict['waterTemperature']['sg']
-            res_list.append(f"Water temp: {int(water_temp)} C˚")
-            cloud_cover = day_dict['cloudCover']['sg']
-            res_list.append(f"Cloud cover: {cloud_cover}")
-            humidity = day_dict['humidity']['sg']
-            res_list.append(f"Humidity: {int(humidity)}%")
-            pressure = day_dict['pressure']['sg']
+
+            wave_height = day_dict['waveHeight']
+            res_list.append(f"🌊 Wave height: {wave_height} m")
+
+            air_temp = day_dict['airTemperature']
+            res_list.append(f"🌡️ Air temp: {int(air_temp)} C˚")
+
+            water_temp = day_dict['waterTemperature']
+            res_list.append(f"💦 Water temp: {int(water_temp)} C˚")
+
+            cloud_cover = day_dict['cloudCover']
+            res_list.append(f"{get_cloud_coverage(int(cloud_cover))} Cloud cover: {int(cloud_cover)}%")
+
+            humidity = day_dict['humidity']
+            res_list.append(f"💧 Humidity: {int(humidity)}%")
+
+            pressure = day_dict['pressure']
             mm_hg = 0.75006375541921
             p = pressure * mm_hg
-            res_list.append(f"Pressure: {int(p)} mmHG")
+
+            res_list.append(f"💪 Pressure: {int(p)} mmHG")
             res_list.append("============================")
 
         result = '\n'.join(res_list)
