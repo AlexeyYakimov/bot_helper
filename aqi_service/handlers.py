@@ -5,15 +5,11 @@ from tg_bot.keyboards import message_match_button
 
 
 def aqi_message_handler(message):
-    bot.send_message(message.chat.id, aqi.get_data(), user_name=message.chat.username,
-                     keyboard=bot.get_inline_keyboard())
-    bot.send_log_message(message.chat.id, message.chat.username, message.chat.text)
+    bot.send_message(message.chat.id, aqi.get_data(), keyboard=bot.get_inline_keyboard())
 
 
 def aqi_description_handler(call):
-    bot.send_message(call.from_user.id, aqi.get_description(), user_name=call.from_user.username,
-                     keyboard=bot.get_reply_keyboard())
-    bot.send_log_message(call.from_user.id, call.from_user.username, call.data)
+    bot.send_message(call.from_user.id, aqi.get_description(), keyboard=bot.get_reply_keyboard())
 
 
 def register_handlers():
