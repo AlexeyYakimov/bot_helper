@@ -135,6 +135,3 @@ def convert_data_to_str(data: list) -> str:
         return result
     except:
         return "Some thing went wrong!"
-
-
-print(get_current_weather())
