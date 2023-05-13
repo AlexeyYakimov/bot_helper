@@ -1,7 +1,7 @@
 from flask import Blueprint, request
 
 from korona_service.korona_api import get_rate_for
-from utils.token_storage import Token, get_token
+from in_memory_db.token_storage import Token, get_token
 
 korona_api_routes = Blueprint('korona_api', __name__, url_prefix='/v1/exchange')
 

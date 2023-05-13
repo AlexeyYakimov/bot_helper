@@ -2,8 +2,8 @@ import arrow
 import requests
 
 from aqi_service.aqi_utils import get_usaqi_description, AQI
-from utils.global_utils import TZ_GE
-from utils.token_storage import Token, get_token
+from in_memory_db.in_memory_data import TZ_GE
+from in_memory_db.token_storage import Token, get_token
 
 url = f"https://api.airvisual.com/v2/city?key={get_token(Token.AQI)}&country=Georgia&state=Ajaria&city=Batumi"
 

@@ -1,6 +1,6 @@
 import requests
 
-from utils.global_utils import my_id
+from in_memory_db.in_memory_data import my_id
 from tg_bot.bot import bot
 
 

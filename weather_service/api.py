@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 
-from utils.token_storage import get_token, Token
+from in_memory_db.token_storage import get_token, Token
 from weather_service.marine_api import get_current_weather
 
 weather_api_routes = Blueprint('weather_api', __name__, url_prefix='/v1/weather')

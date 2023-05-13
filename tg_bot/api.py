@@ -2,8 +2,8 @@ import telebot
 from flask import Blueprint, request
 
 from tg_bot import bot
-from utils.global_utils import do_id, my_id
-from utils.token_storage import Token, get_token
+from in_memory_db.in_memory_data import do_id, my_id
+from in_memory_db.token_storage import Token, get_token
 
 bot_api_routes = Blueprint('telegram_api', __name__)
 

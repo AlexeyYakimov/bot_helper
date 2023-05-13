@@ -1,8 +1,8 @@
 import telebot
 from telebot import TeleBot
 
-from utils.global_utils import my_id
-from utils.token_storage import Token, get_token
+from in_memory_db.in_memory_data import my_id
+from in_memory_db.token_storage import Token, get_token
 
 bot: TeleBot = telebot.TeleBot(token=get_token(Token.TELEGRAM))
 
