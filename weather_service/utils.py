@@ -1,11 +1,10 @@
 def get_rounded_time(start_time, current_time) -> bool:
-    t = current_time.floor('hours')
-    if t.time().minute <= 30:
-        t = t.shift(hours=1).time()
-    else:
-        t = t.time()
+    t = current_time
 
-    print(t)
+    if t.time().minute >= 30:
+        t = t.shift(hours=1)
+
+    t = t.floor('hours').time()
     return start_time.time() == t
 
 

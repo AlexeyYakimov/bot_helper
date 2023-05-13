@@ -26,22 +26,22 @@ def get_current_weather() -> dict:
         weather_time = arrow.get(hour['time'])
         current_time = arrow.now(tz.TZ_GE)
 
-        if weather_time.date().day == current_time.date().day and get_rounded_time(weather_time, current_time):
+        if weather_time.time().hour >= current_time.time().hour and get_rounded_time(weather_time, current_time):
             result = map_to_weather_data(hour)
 
     return result
 
 
 def get_data_for_three_hours() -> list:
-    start_time = arrow.now(tz.TZ_GE).floor('hours').datetime
-    end_time = arrow.now(tz.TZ_GE).floor('hours').shift(hours=shift_time).datetime
+    start_time = arrow.now(tz.TZ_GE).floor('hours').timestamp()
+    end_time = arrow.now(tz.TZ_GE).floor('hours').shift(hours=shift_time).timestamp()
     data = get_data()['hours']
 
     hour_list = []
 
     for hour in data:
-        time = arrow.get(hour['time']).datetime
-        if start_time.timestamp() <= time.timestamp() <= end_time.timestamp():
+        time = arrow.get(hour['time']).timestamp()
+        if start_time <= time <= end_time:
             hour_list.append(map_to_weather_data(hour))
 
     return hour_list
@@ -95,7 +95,7 @@ def get_data() -> dict:
 
     for time in response['hours']:
         time_ge = arrow.get(time['time']).to(tz.TZ_GE)
-        time['time'] = time_ge.format('YYYY-MM-DD HH:mm')
+        time['time'] = time_ge.format('YYYY-MM-DD HH:mm:ssZZ')
 
     return response
 
@@ -135,3 +135,6 @@ def convert_data_to_str(data: list) -> str:
         return result
     except:
         return "Some thing went wrong!"
+
+
+print(get_current_weather())
