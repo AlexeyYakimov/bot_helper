@@ -1,16 +1,20 @@
 from telebot.types import ReplyKeyboardMarkup, InlineKeyboardMarkup
 
 from in_memory_db.in_memory_data import my_id
+from in_memory_db.token_storage import Token, get_token
 from tg_bot import bot, handlers
 from tg_bot import keyboards
 from tg_bot.bot import bot as main_bot
 from tg_bot.keyboards import aqi_btn, puk_btn, inline_aqi_btn, weather_btn, custom_amount_btn
 from tg_bot.utils import get_webhook_url
-from in_memory_db.token_storage import Token, get_token
 
 
-def send_message(chat_id, data, keyboard=None):
-    bot.send_message(chat_id, data, keyboard)
+def send_message(chat_id, data, user_name, keyboard=None):
+    bot.send_message(chat_id, data, user_name, keyboard)
+
+
+def send_log_message(chat_id, user_name, message):
+    bot.send_log_message(chat_id, user_name, message)
 
 
 def get_reply_keyboard() -> ReplyKeyboardMarkup:
@@ -33,4 +37,6 @@ def set_webhook():
     main_bot.remove_webhook()
     main_bot.set_webhook(url=ngrok_url)
 
-    bot.send_message(my_id, f"Bot started {ngrok_url} \n\n Alert: {get_token(Token.ALERT)}")
+    bot.send_message(my_id,
+                     f"Bot started {ngrok_url} \n\n Alert: {get_token(Token.ALERT)} \n API: {get_token(Token.API)}",
+                     user_name="Me")

@@ -24,10 +24,10 @@ def send_alert_to():
             msg = json_data.get('msg')
 
             if chat_id is not None:
-                bot.send_message(chat_id, msg)
+                bot.send_message(chat_id, msg, "Me")
             else:
-                bot.send_message(do_id, msg)
-                bot.send_message(my_id, msg)
+                bot.send_message(do_id, msg, "Dome")
+                bot.send_message(my_id, msg, "Me")
 
             return {'success': "Alert successfully send"}, 200
         else:
