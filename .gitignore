@@ -161,3 +161,4 @@ cython_debug/
 
 /in_memory_db/api_keys
 /in_memory_db/tokens
+/db/test_db.db
