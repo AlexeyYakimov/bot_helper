@@ -1,7 +1,6 @@
 import requests
 
-from data_models import CurrencyData
-from db.queues import Currency
+from data_models import CurrencyData, Currency
 from in_memory_db.token_storage import get_token, Token
 
 
@@ -43,6 +42,3 @@ def get_currency_data() -> list:
     except Exception as e:
         print(f"Some thing broke on {url} {e}")
         return result
-
-
-print(get_currency_data())
