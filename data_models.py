@@ -1,25 +1,8 @@
-from enum import Enum
-
-
-class Currency(Enum):
-    USD = 1
-    EUR = 2
-    RUB = 3
-    GEL = 4
-
-    @classmethod
-    def from_str(cls, label: str):
-        label = label.upper()
-        if label in ('USD', 1):
-            return cls.USD
-        elif label in ('EUR', 2):
-            return cls.EUR
-        elif label in ('RUB', 3):
-            return cls.RUB
-        elif label in ('GEL', 4):
-            return cls.GEL
-        else:
-            raise NotImplementedError
+class Currency:
+    def __init__(self, currency_id: int, name: str, full_name: str):
+        self.currency_id = currency_id
+        self.name = name
+        self.full_name = full_name
 
 
 class CurrencyData:

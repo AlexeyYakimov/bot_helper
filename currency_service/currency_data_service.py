@@ -1,19 +1,20 @@
 import requests
 
 from data_models import CurrencyData, Currency
+from db.queues import get_currency_by_name, get_currency_by_names
 from in_memory_db.token_storage import get_token, Token
 
-
-# response_example = """{
+#
+# response_example = {
 #   "quotes": {
 #     "USDEUR": 0.914104,
 #     "USDGEL": 2.57504,
 #     "USDRUB": 77.360373
 #   },
 #   "source": "USD",
-#   "success": true,
+#   "success": True,
 #   "timestamp": 1683980043
-# }"""
+# }
 
 # 'RateLimit-Limit': '100',
 # 'RateLimit-Remaining': '82',
@@ -24,8 +25,9 @@ from in_memory_db.token_storage import get_token, Token
 # 'X-RateLimit-Remaining-Month': '82',
 
 
-def get_currency_data() -> list:
-    url = "https://api.apilayer.com/currency_data/live?source=USD&currencies=EUR,GEL,RUB"
+def get_currency_data(source, cur_list: list) -> list:
+    names_list = ",".join(cur_list)
+    url = f"https://api.apilayer.com/currency_data/live?source={source}&currencies={names_list}"
     result = []
     headers = {
         "apikey": f"{get_token(Token.API_LAYER)}"
@@ -33,14 +35,21 @@ def get_currency_data() -> list:
 
     response = requests.request("GET", url, headers=headers).json()
     timestamp = response['timestamp']
-    source = Currency.from_str(str(response['source']))
+    base = get_currency_by_name(str(response['source']))
     rates: dict = response['quotes']
 
+    mapped = map(lambda key: key.removeprefix(base.name), rates.keys())
+    cur_l = get_currency_by_names(mapped)
+
     for c, r in rates.items():
-        name = Currency.from_str(c.removeprefix(source.name))
+        name = ""
+        for n in cur_l:
+            if n.name == c.removeprefix(base.name):
+                name = n
+
         result.append(CurrencyData(timestamp=timestamp,
                                    rate=float(r),
                                    currency=name,
-                                   source_currency=source
+                                   source_currency=base
                                    ))
     return result

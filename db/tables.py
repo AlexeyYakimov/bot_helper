@@ -25,7 +25,8 @@ def create_currency_db() -> bool:
     currency_name = f"""CREATE TABLE "{currency_table}" (
         "id"    INTEGER,
         "name"  TEXT UNIQUE,
-        PRIMARY KEY("id")
+        "full_name" TEXT,
+        PRIMARY KEY("id" AUTOINCREMENT)
     );"""
     with create_connection() as connection:
         return _create_table(connection, currency_name)
