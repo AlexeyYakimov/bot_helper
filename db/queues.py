@@ -1,6 +1,6 @@
 from sqlite3 import Error
 
-from data_models import Currency
+from data_models import Currency, CurrencyData
 from db import tables
 from db.connection import create_connection
 
@@ -9,7 +9,7 @@ def fill_currency_name():
     try:
         with create_connection() as conn:
             sql = f''' INSERT INTO {tables.currency_table}(name, full_name)
-                      VALUES(?,?) '''
+                      VALUES(?,?);'''
             cur = conn.cursor()
             for k, v in all_currencies_list.items():
                 cur.execute(sql, [k, v])
@@ -23,10 +23,9 @@ def get_currency_by_id(currency_id: int) -> Currency:
     try:
         with create_connection() as conn:
             cur = conn.cursor()
-            cur.execute(f"SELECT * FROM {tables.currency_table} WHERE id= {currency_id}")
-
-            db_result = cur.fetchall()[0]
-
+            cur.execute(f"SELECT * FROM {tables.currency_table} WHERE id= {currency_id};")
+            db_result = cur.fetchone()
+            print(db_result)
             return Currency(db_result[0], db_result[1], db_result[2])
     except Error as e:
         print(e)
@@ -36,7 +35,7 @@ def get_currency_by_name(currency: str) -> Currency:
     try:
         with create_connection() as conn:
             cur = conn.cursor()
-            cur.execute(f"SELECT * FROM {tables.currency_table} WHERE name = UPPER(\"{currency}\")")
+            cur.execute(f"SELECT * FROM {tables.currency_table} WHERE name = UPPER(\"{currency}\");")
 
             db_result = cur.fetchall()[0]
             result = Currency(db_result[0], db_result[1], db_result[2])
@@ -51,7 +50,7 @@ def get_currency_by_names(currencies) -> list:
     try:
         with create_connection() as conn:
             cur = conn.cursor()
-            cur.execute(f"SELECT * FROM {tables.currency_table} WHERE {find_str}")
+            cur.execute(f"SELECT * FROM {tables.currency_table} WHERE {find_str};")
 
             db_result = cur.fetchall()
             result = []
@@ -59,6 +58,32 @@ def get_currency_by_names(currencies) -> list:
                 result.append(Currency(res[0], res[1], res[2]))
 
             return result
+    except Error as e:
+        print(e)
+
+
+def save_currency_data(data: CurrencyData):
+    try:
+        with create_connection() as conn:
+            cur = conn.cursor()
+            sql = f''' INSERT INTO {tables.rates_table}(timestamp, rate, id_currency_name, id_source)
+                      VALUES(?,?,?,?);'''
+            cur.execute(sql, [data.timestamp, data.rate, data.currency.currency_id, data.source_currency.currency_id])
+            conn.commit()
+    except Error as e:
+        print(e)
+
+
+def save_currency_data_list(data_list: list):
+    try:
+        with create_connection() as conn:
+            cur = conn.cursor()
+            sql = f''' INSERT INTO {tables.rates_table}(timestamp, rate, id_currency_name, id_source)
+                      VALUES(?,?,?,?);'''
+            for data in data_list:
+                cur.execute(sql,
+                            [data.timestamp, data.rate, data.currency.currency_id, data.source_currency.currency_id])
+            conn.commit()
     except Error as e:
         print(e)
 
