@@ -1,3 +1,4 @@
+import datetime
 from threading import Thread
 
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -14,4 +15,4 @@ def add_task(func, hours, minute):
 
 
 def scheduler_run():
-    Thread.start(scheduler.start())
+    scheduler.start()
