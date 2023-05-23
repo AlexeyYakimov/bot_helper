@@ -16,29 +16,35 @@ from in_memory_db.token_storage import get_token, Token
 #   "timestamp": 1684138863
 # }"""
 
+# 'RateLimit-Limit': '250',
+# 'RateLimit-Remaining': '243',
+# 'RateLimit-Reset': '1138520',
+# 'X-RateLimit-Limit-Day': '250',
+# 'X-RateLimit-Limit-Month': '250',
+# 'X-RateLimit-Remaining-Day': '248',
+# 'X-RateLimit-Remaining-Month': '243',
 
 def get_currency_data() -> list:
     url = "https://api.apilayer.com/exchangerates_data/latest?symbols=RUB,GEL,EUR&base=USD"
     result = []
-    try:
-        headers = {
-            "apikey": f"{get_token(Token.API_LAYER)}"
-        }
 
-        response = requests.request("GET", url, headers=headers).json()
-        timestamp = response['timestamp']
-        source = Currency.from_str(str(response['base']))
+    headers = {
+        "apikey": f"{get_token(Token.API_LAYER)}"
+    }
 
-        rates: dict = response['rates']
+    response = requests.request("GET", url, headers=headers)
+    print(response.headers)
+    response = response.json()
+    timestamp = response['timestamp']
+    source = Currency.from_str(str(response['base']))
 
-        for c, r in rates.items():
-            name = Currency.from_str(c.removeprefix(source.name))
-            result.append(CurrencyData(timestamp=timestamp,
-                                       rate=float(r),
-                                       currency=name,
-                                       source_currency=source
-                                       ))
-        return result
-    except Exception as e:
-        print(f"Some thing broke on {url} {e}")
-        return result
+    rates: dict = response['rates']
+
+    for c, r in rates.items():
+        name = Currency.from_str(c.removeprefix(source.name))
+        result.append(CurrencyData(timestamp=timestamp,
+                                   rate=float(r),
+                                   currency=name,
+                                   source_currency=source
+                                   ))
+    return result
