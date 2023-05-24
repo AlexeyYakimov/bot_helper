@@ -22,6 +22,11 @@ def currency_task_250():
     save_currency_data_list(data)
 
 
+def print_task():
+    print("Test Run")
+
+
 def add_currency_service_to_schedule():
-    add_task(currency_task_100, hours='8,10,12,14,16,18,20,23', minute='0')
-    add_task(currency_task_250, hours='11,17,22', minute='0')
+    add_task(currency_task_250, hours='8,10,12,14,16,18,20,23', minute='0')
+    add_task(currency_task_100, hours='11,17,22', minute='0')
+    add_task(print_task, hours='*', minute='*/1')
