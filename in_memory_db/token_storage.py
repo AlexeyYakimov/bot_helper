@@ -10,16 +10,8 @@ class Token(Enum):
     STORMGLASS = 'stormglass'
     ALERT = 'alert'
     AQI = 'iqair'
-    API = 'apitoken'
-
-
-def get_bot_token() -> str:
-    _read_file()
-    if len(_token_dict['bot']) != 0:
-        token = _token_dict['bot']
-    else:
-        raise Exception("Provide your tg_bot token in file with cold api_keys")
-    return token
+    API = 'apitoken',
+    API_LAYER = 'apilayer'
 
 
 def get_token(token: Token) -> str:
