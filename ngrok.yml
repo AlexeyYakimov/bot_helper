@@ -1,0 +1,7 @@
+version: "2"
+remote_management: false
+web_addr: false
+tunnels:
+  webhook:
+    addr: 80
+    proto: http

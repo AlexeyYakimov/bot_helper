@@ -1,0 +1,24 @@
+services:
+  ngrok:
+    image: ngrok/ngrok:latest
+    restart: always
+    command:
+      - "start"
+      - "--all"
+      - "--config"
+      - "/etc/ngrok.yml"
+    environment:
+      - NGROK_AUTHTOKEN
+    volumes:
+      - ./ngrok.yml:/etc/ngrok.yml
+  korona-service:
+    build: .
+    image: korona-service:latest
+    volumes:
+      - ./db/:/db
+    environment:
+      - TZ
+      - FLASK_SERVER_PORT
+    ports:
+      - 80:80
+    restart: always
