@@ -6,11 +6,9 @@ services:
       - "start"
       - "--all"
       - "--config"
-      - "/etc/ngrok.yml"
+      - "http 80"
     environment:
       - NGROK_AUTHTOKEN
-    volumes:
-      - ./ngrok.yml:/etc/ngrok.yml
   korona-service:
     build: .
     image: korona-service:latest
