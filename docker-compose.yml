@@ -6,7 +6,7 @@ services:
       - "start"
       - "--all"
       - "--config"
-      - "http 80"
+      - "/etc/ngrok.yml"
     environment:
       - NGROK_AUTHTOKEN
     volumes:
