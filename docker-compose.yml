@@ -21,6 +21,13 @@ services:
     environment:
       - TZ
       - FLASK_SERVER_PORT
+      - TELEGRAM_TOKEN
+      - NGROK_API_TOKEN
+      - STORMGLASS_TOKEN
+      - ALERT_TOKEN
+      - AQI_TOKEN
+      - API_TOKEN
+      - API_LAYER_TOKEN
     ports:
       - 80:80
     restart: always

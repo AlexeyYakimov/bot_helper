@@ -6,7 +6,7 @@ from in_memory_db.token_storage import get_token, Token
 from weather_service.utils import get_cloud_coverage, map_to_weather_data, get_rounded_time
 
 temp = {}
-prev_run_time = arrow.now(tz.TZ_GE).floor('day')
+prev_run_time = arrow.now(tz.TZ_CURRENT).floor('day')
 shift_time = 2
 can_do_request = True
 
@@ -24,7 +24,7 @@ def get_current_weather() -> dict:
     result = {}
     for hour in data:
         weather_time = arrow.get(hour['time'])
-        current_time = arrow.now(tz.TZ_GE)
+        current_time = arrow.now(tz.TZ_CURRENT)
 
         if weather_time.time().hour >= current_time.time().hour and get_rounded_time(weather_time, current_time):
             result = map_to_weather_data(hour)
@@ -33,8 +33,8 @@ def get_current_weather() -> dict:
 
 
 def get_data_for_three_hours() -> list:
-    start_time = arrow.now(tz.TZ_GE).floor('hours').timestamp()
-    end_time = arrow.now(tz.TZ_GE).floor('hours').shift(hours=shift_time).timestamp()
+    start_time = arrow.now(tz.TZ_CURRENT).floor('hours').timestamp()
+    end_time = arrow.now(tz.TZ_CURRENT).floor('hours').shift(hours=shift_time).timestamp()
     data = get_data()['hours']
 
     hour_list = []
@@ -49,7 +49,7 @@ def get_data_for_three_hours() -> list:
 
 def get_data() -> dict:
     global prev_run_time, temp, can_do_request
-    current_time = arrow.now(tz.TZ_GE)
+    current_time = arrow.now(tz.TZ_CURRENT)
 
     try:
         meta_data = temp['meta']
@@ -65,8 +65,8 @@ def get_data() -> dict:
 
     run = current_time.timestamp() > prev_run_time.shift(hours=shift_time).timestamp() and can_do_request
     if run or len(temp) == 0:
-        start_time = arrow.now(tz=tz.TZ_GE).floor('day').to(tz.TZ_UTC).timestamp()
-        end_time = arrow.now(tz=tz.TZ_GE).ceil('day').to(tz.TZ_UTC).timestamp()
+        start_time = arrow.now(tz=tz.TZ_CURRENT).floor('day').to(tz.TZ_UTC).timestamp()
+        end_time = arrow.now(tz=tz.TZ_CURRENT).ceil('day').to(tz.TZ_UTC).timestamp()
 
         try:
             response = requests.get(
@@ -94,7 +94,7 @@ def get_data() -> dict:
         response = temp
 
     for time in response['hours']:
-        time_ge = arrow.get(time['time']).to(tz.TZ_GE)
+        time_ge = arrow.get(time['time']).to(tz.TZ_CURRENT)
         time['time'] = time_ge.format('YYYY-MM-DD HH:mm:ssZZ')
 
     return response

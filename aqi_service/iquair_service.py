@@ -2,12 +2,12 @@ import arrow
 import requests
 
 from aqi_service.aqi_utils import get_usaqi_description, AQI
-from in_memory_db.in_memory_data import TZ_GE
+from in_memory_db.in_memory_data import TZ_CURRENT
 from in_memory_db.token_storage import Token, get_token
 
 url = f"https://api.airvisual.com/v2/city?key={get_token(Token.AQI)}&country=Georgia&state=Ajaria&city=Batumi"
 
-last_request = arrow.now(TZ_GE)
+last_request = arrow.now(TZ_CURRENT)
 cached_value = 0
 time_shift = 1
 first_run = True
@@ -17,12 +17,12 @@ def get_data() -> str:
     global cached_value, last_request, first_run
 
     try:
-        current_time = arrow.now(TZ_GE)
+        current_time = arrow.now(TZ_CURRENT)
 
         if first_run or current_time > last_request.shift(hours=time_shift):
             data = requests.get(url).json()["data"]["current"]["pollution"]["aqius"]
             cached_value = data
-            last_request = arrow.now(TZ_GE)
+            last_request = arrow.now(TZ_CURRENT)
             first_run = False
             result = data
         else:
