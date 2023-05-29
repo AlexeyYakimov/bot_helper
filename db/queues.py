@@ -70,6 +70,7 @@ def save_currency_data(data: CurrencyData):
                       VALUES(?,?,?,?);'''
             cur.execute(sql, [data.timestamp, data.rate, data.currency.currency_id, data.source_currency.currency_id])
             conn.commit()
+            return cur.lastrowid
     except Error as e:
         print(e)
 
@@ -84,6 +85,7 @@ def save_currency_data_list(data_list: list):
                 cur.execute(sql,
                             [data.timestamp, data.rate, data.currency.currency_id, data.source_currency.currency_id])
             conn.commit()
+            return cur.lastrowid
     except Error as e:
         print(e)
 
