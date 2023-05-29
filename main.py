@@ -6,7 +6,7 @@ import tg_bot
 import weather_service
 from db import init_db_tables
 from korona_service.api import korona_api_routes
-from schedule_runner import add_all_tasks, run_cron
+from schedule_runner import add_all_tasks, run_cron, clean_cron
 from server.api_server import flask_app
 from tg_bot.api import bot_api_routes
 from weather_service.api import weather_api_routes
@@ -25,6 +25,7 @@ if __name__ == '__main__':
 
     init_db_tables()
 
+    clean_cron()
     add_all_tasks()
     run_cron()
 
