@@ -1,8 +1,12 @@
-from threading import Thread
+import logging
+from apscheduler.schedulers.background import BackgroundScheduler
+from flask import Flask
 
-from apscheduler.schedulers.blocking import BlockingScheduler
+flask = Flask(__name__)
 
-scheduler = BlockingScheduler()
+logging.basicConfig(level=logging.DEBUG)
+
+scheduler = BackgroundScheduler()
 
 
 def add_task(func, hours, minute):
@@ -14,7 +18,7 @@ def add_task(func, hours, minute):
 
 
 def scheduler_run():
-    Thread(target=scheduler.start).start()
+    scheduler.start()
 
 
 def scheduler_remove_all_tasks():
