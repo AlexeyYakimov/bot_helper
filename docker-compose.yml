@@ -1,5 +1,7 @@
+version: "3.9"
 services:
   ngrok:
+    network_mode: "host"
     image: ngrok/ngrok:latest
     restart: always
     command:

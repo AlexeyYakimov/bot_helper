@@ -1,6 +1,7 @@
 version: "2"
 remote_management: false
 web_addr: false
+log: stdout
 tunnels:
   webhook:
     addr: 80
