@@ -1,5 +1,4 @@
 import locale
-from typing import Dict, Any
 
 import requests
 from requests import RequestException
@@ -35,7 +34,7 @@ def get_custom_amount(amount: int) -> str:
     try:
         data = get_rate_for(amount)
         return f"Exchange Rate: <b>{data['exchangeRate']}</b>\n\n" \
-               f"Pay <b>{get_pretty_amount(data['amount'])}₽</b> for <b>{amount}₾</b>"
+               f"Pay <b>{data['amount']}₽</b> for <b>{amount}₾</b>"
     except RequestException:
         print("Error")
         return "Some thing went wrong, try again later!"
@@ -45,7 +44,3 @@ def get_custom_amount(amount: int) -> str:
     except KeyError as e:
         print(f"Key Error {e}")
         return f"Wou wou wou, easy, enter sum less then <b>{max_lari_cap}₾</b>"
-
-
-def get_pretty_amount(amount) -> str:
-    return locale.currency(amount, grouping=True, international=True, symbol=False)
