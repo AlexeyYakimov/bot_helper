@@ -34,7 +34,7 @@ def get_custom_amount(amount: int) -> str:
     try:
         data = get_rate_for(amount)
         return f"Exchange Rate: <b>{data['exchangeRate']}</b>\n\n" \
-               f"Pay <b>{data['amount']}₽</b> for <b>{amount}₾</b>"
+               f"Pay <b>{pretty_print(data['amount'])}₽</b> for <b>{amount}₾</b>"
     except RequestException:
         print("Error")
         return "Some thing went wrong, try again later!"
@@ -44,3 +44,14 @@ def get_custom_amount(amount: int) -> str:
     except KeyError as e:
         print(f"Key Error {e}")
         return f"Wou wou wou, easy, enter sum less then <b>{max_lari_cap}₾</b>"
+
+
+def pretty_print(number) -> str:
+    moda = divmod(number, 1000)
+    result = ""
+    for idx, i in enumerate(moda):
+        if idx != len(moda) - 1:
+            result += f"{int(i)} "
+        else:
+            result += str(round(i, 2))
+    return result
