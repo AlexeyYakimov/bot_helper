@@ -1,12 +1,12 @@
 import tg_bot as bot
-from korona_service.korona_api import get_custom_amount, max_lari_cap
+from korona_service.korona_api import get_pretty_print_data, max_lari_cap
 from tg_bot import custom_amount_btn, puk_btn
 from tg_bot.bot import bot as main_bot
 from tg_bot.keyboards import message_match_button
 
 
 def money_handler(message):
-    bot.send_message(message.chat.id, get_custom_amount(4000), keyboard=bot.get_reply_keyboard())
+    bot.send_message(message.chat.id, get_pretty_print_data(4000), keyboard=bot.get_reply_keyboard())
 
 
 def custom_amount_handler(message):
@@ -18,9 +18,9 @@ def amount_handler(message):
     try:
         if int(message.text) > max_lari_cap:
             main_bot.register_next_step_handler(message, amount_handler)
-            bot.send_message(message.chat.id, get_custom_amount(int(message.text)))
+            bot.send_message(message.chat.id, get_pretty_print_data(int(message.text)))
         else:
-            bot.send_message(message.chat.id, get_custom_amount(int(message.text)), keyboard=bot.get_reply_keyboard())
+            bot.send_message(message.chat.id, get_pretty_print_data(int(message.text)), keyboard=bot.get_reply_keyboard())
 
     except:
         main_bot.register_next_step_handler(message, amount_handler)

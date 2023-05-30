@@ -4,6 +4,7 @@ from db.connection import create_connection
 
 currency_table = "currency_name"
 rates_table = "rates"
+korona_table = "korona_table"
 
 
 def _create_table(conn, create_table_sql) -> bool:
@@ -46,7 +47,18 @@ def create_rates_db() -> bool:
         return _create_table(connection, rates)
 
 
-def drop_db():
+def create_korona_table() -> bool:
+    korona = f"""CREATE TABLE "{korona_table}" (
+         "id"    INTEGER UNIQUE,
+         "timestamp" INTEGER,
+         "rate"  NUMERIC,
+         "send_amount" NUMERIC,
+         "send_currency_id"  INTEGER,
+         "receive_amount" NUMERIC,
+         "receive_currency_id"  INTEGER,
+         "commission" NUMERIC,
+         PRIMARY KEY("id" AUTOINCREMENT));
+    """
+
     with create_connection() as connection:
-        _create_table(connection, f"""DROP TABLE {rates_table}""")
-        _create_table(connection, f"""DROP TABLE {currency_table}""")
+        return _create_table(connection, korona)

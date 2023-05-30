@@ -1,6 +1,6 @@
 from sqlite3 import Error
 
-from data_models import Currency, CurrencyData
+from data_models import Currency, CurrencyData, KoronaData
 from db import tables
 from db.connection import create_connection
 
@@ -45,7 +45,7 @@ def get_currency_by_name(currency: str) -> Currency:
         print(e)
 
 
-def get_currency_by_names(currencies) -> list:
+def get_currency_by_names(currencies: list) -> list:
     find_str = " or ".join(map(lambda cu: f"name = UPPER(\"{cu}\")", currencies))
     try:
         with create_connection() as conn:
@@ -86,6 +86,47 @@ def save_currency_data_list(data_list: list):
                             [data.timestamp, data.rate, data.currency.currency_id, data.source_currency.currency_id])
             conn.commit()
             return cur.lastrowid
+    except Error as e:
+        print(e)
+
+
+def save_korona_data(data: KoronaData):
+    try:
+        with create_connection() as conn:
+            cur = conn.cursor()
+            sql = f''' INSERT INTO {tables.korona_table}(timestamp, rate, send_amount, send_currency_id,
+             receive_amount, receive_currency_id, commission)
+                      VALUES(?,?,?,?,?,?,?);'''
+            cur.execute(sql, [data.timestamp,
+                              data.rate,
+                              data.sending_amount,
+                              data.sending_currency.currency_id,
+                              data.receiving_amount,
+                              data.receiving_currency.currency_id,
+                              data.commission])
+            conn.commit()
+            return cur.lastrowid
+    except Error as e:
+        print(e)
+
+
+def get_last_korona_data() -> KoronaData:
+    try:
+        with create_connection() as conn:
+            cur = conn.cursor()
+            cur.execute(f"SELECT * FROM {tables.korona_table} ORDER BY timestamp DESC LIMIT 1;")
+            db_result = cur.fetchone()
+            sending_currency = get_currency_by_id(db_result[4])
+            receiving_currency = get_currency_by_id(db_result[6])
+            return KoronaData(
+                timestamp=db_result[1],
+                rate=db_result[2],
+                sending_amount=db_result[3],
+                sending_currency=sending_currency,
+                receiving_amount=db_result[5],
+                receiving_currency=receiving_currency,
+                commission=db_result[7]
+            )
     except Error as e:
         print(e)
 
