@@ -17,7 +17,7 @@ services:
     build: .
     image: korona-service:latest
     volumes:
-      - ./db/:/db
+      - ./db/:/app/db
     environment:
       - TZ
       - FLASK_SERVER_PORT
