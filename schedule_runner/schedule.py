@@ -1,5 +1,3 @@
-import datetime
-
 from currency_service import service100, service250
 from db.queues import save_currency_data_list
 from schedule_runner.sheduler import add_task
@@ -10,9 +8,7 @@ def currency_task_100():
                       ["EUR", "RUB", "GEL", "AMD", "UAH", "TRY", "SGD", "SEK", "RSD", "RON", "PLN", "MXN", "LVL", "LTL",
                        "JPY",
                        "HUF", "CZK", "CNY", "CHF", "BGN", "AED", "AUD", "ALL", "UZS"])
-    print(data[0])
-    lrid = save_currency_data_list(data)
-    print(f"Run 100 {lrid} {datetime.datetime.now()}")
+    save_currency_data_list(data)
 
 
 def currency_task_250():
@@ -20,10 +16,7 @@ def currency_task_250():
                       ["EUR", "RUB", "GEL", "AMD", "UAH", "TRY", "SGD", "SEK", "RSD", "RON", "PLN", "MXN", "LVL", "LTL",
                        "JPY",
                        "HUF", "CZK", "CNY", "CHF", "BGN", "AED", "AUD", "ALL", "UZS"])
-    print(data[0])
-    lrid = save_currency_data_list(data)
-
-    print(f"Run 250 {lrid} {datetime.datetime.now()}")
+    save_currency_data_list(data)
 
 
 def add_currency_service_to_schedule():
