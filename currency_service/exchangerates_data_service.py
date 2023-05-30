@@ -37,6 +37,7 @@ def get_currency_data(source: str, cur_list: list) -> list:
 
     response = requests.request("GET", url, headers=headers)
     response = response.json()
+    print(response)
     timestamp = response['timestamp']
     base = get_currency_by_name(str(response['base']))
 
