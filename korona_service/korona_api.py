@@ -51,7 +51,7 @@ def get_pretty_print_data(amount: int) -> str:
         data = calculate_amount(get_last_korona_data(), amount)
 
         return f"Exchange Rate: <b>{data.rate}</b> on {arrow.get(data.timestamp).to(TZ_CURRENT).strftime('%H:%M')}\n\n" \
-               f"Pay <b>{pretty_print(data.sending_amount)}₽</b> for <b>{data.receiving_amount}₾</b>"
+               f"Pay <b>{currency_format(data.sending_amount)}₽</b> for <b>{data.receiving_amount}₾</b>"
     except RequestException:
         print("Error")
         return "Some thing went wrong, try again later!"
@@ -63,12 +63,17 @@ def get_pretty_print_data(amount: int) -> str:
         return f"Wou wou wou, easy, enter sum less then <b>{max_lari_cap}₾</b>"
 
 
-def pretty_print(number) -> str:
-    moda = divmod(number, 1000)
+def currency_format(currency) -> str:
+    temp = str(currency).split(".")
     result = ""
-    for idx, i in enumerate(moda):
-        if idx != len(moda) - 1:
-            result += f"{int(i)} "
+    for idx, i in enumerate(temp[0][::-1]):
+        if idx != 0 and divmod(idx, 3)[1] == 0:
+            result = " ".join((i, result))
         else:
-            result += str(round(i, 2))
-    return result
+            result = "".join((i, result))
+
+    rest = temp[1][:2]
+    if len(rest) == 1:
+        rest += "0"
+
+    return f"{result}.{rest}"
