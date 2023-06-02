@@ -34,6 +34,7 @@ def get_currency_data(source, cur_list: list) -> list:
     }
 
     response = requests.request("GET", url, headers=headers).json()
+    print(response)
     timestamp = response['timestamp']
     base = get_currency_by_name(str(response['source']))
     rates: dict = response['quotes']

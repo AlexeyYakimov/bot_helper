@@ -1,5 +1,3 @@
-from sqlite3 import Error
-
 from data_models import Currency, CurrencyData, KoronaData
 from db import tables
 from db.connection import create_connection
@@ -15,7 +13,7 @@ def fill_currency_name():
                 cur.execute(sql, [k, v])
             conn.commit()
             return cur.lastrowid
-    except Error as e:
+    except Exception as e:
         print(e)
 
 
@@ -27,7 +25,7 @@ def get_currency_by_id(currency_id: int) -> Currency:
             db_result = cur.fetchone()
             print(db_result)
             return Currency(db_result[0], db_result[1], db_result[2])
-    except Error as e:
+    except Exception as e:
         print(e)
 
 
@@ -41,7 +39,7 @@ def get_currency_by_name(currency: str) -> Currency:
             result = Currency(db_result[0], db_result[1], db_result[2])
 
             return result
-    except Error as e:
+    except Exception as e:
         print(e)
 
 
@@ -58,7 +56,7 @@ def get_currency_by_names(currencies: list) -> list:
                 result.append(Currency(res[0], res[1], res[2]))
 
             return result
-    except Error as e:
+    except Exception as e:
         print(e)
 
 
@@ -71,7 +69,7 @@ def save_currency_data(data: CurrencyData):
             cur.execute(sql, [data.timestamp, data.rate, data.currency.currency_id, data.source_currency.currency_id])
             conn.commit()
             return cur.lastrowid
-    except Error as e:
+    except Exception as e:
         print(e)
 
 
@@ -86,8 +84,8 @@ def save_currency_data_list(data_list: list):
                             [data.timestamp, data.rate, data.currency.currency_id, data.source_currency.currency_id])
             conn.commit()
             return cur.lastrowid
-    except Error as e:
-        print(e)
+    except Exception as e:
+        print(f"{e} {data_list}")
 
 
 def save_korona_data(data: KoronaData):
@@ -106,7 +104,7 @@ def save_korona_data(data: KoronaData):
                               data.commission])
             conn.commit()
             return cur.lastrowid
-    except Error as e:
+    except Exception as e:
         print(e)
 
 
@@ -127,7 +125,7 @@ def get_last_korona_data() -> KoronaData:
                 receiving_currency=receiving_currency,
                 commission=db_result[7]
             )
-    except Error as e:
+    except Exception as e:
         print(e)
 
 
