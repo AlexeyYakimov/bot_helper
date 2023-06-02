@@ -34,23 +34,23 @@ def get_currency_data(source, cur_list: list) -> list:
     }
 
     response = requests.request("GET", url, headers=headers).json()
-    print(response)
     timestamp = response['timestamp']
     base = get_currency_by_name(str(response['source']))
     rates: dict = response['quotes']
 
-    mapped = map(lambda key: key.removeprefix(base.name), rates.keys())
+    mapped = list(map(lambda k: k.removeprefix(base.name), rates.keys()))
+    print(mapped)
     cur_l = get_currency_by_names(mapped)
-
-    for c, r in rates.items():
-        name = ""
+    print(cur_l)
+    for key, value in rates.items():
+        current_cur = None
         for n in cur_l:
-            if n.name == c.removeprefix(base.name):
-                name = n
+            if n.name == key.removeprefix(base.name):
+                current_cur = n
 
         result.append(CurrencyData(timestamp=timestamp,
-                                   rate=float(r),
-                                   currency=name,
+                                   rate=float(value),
+                                   currency=current_cur,
                                    source_currency=base
                                    ))
     return result

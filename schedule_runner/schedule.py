@@ -17,6 +17,7 @@ def currency_task_250():
                       ["EUR", "RUB", "GEL", "AMD", "UAH", "TRY", "SGD", "SEK", "RSD", "RON", "PLN", "MXN", "LVL", "LTL",
                        "JPY",
                        "HUF", "CZK", "CNY", "CHF", "BGN", "AED", "AUD", "ALL", "UZS"])
+    print(f"data {data}")
     save_currency_data_list(data)
 
 
@@ -29,3 +30,7 @@ def add_currency_service_to_schedule():
     add_task(currency_task_250, hours='8,10,12,14,16,18,20,23', minute=0)
     add_task(currency_task_100, hours='11,17,22', minute=0)
     add_task(korona_task, hours='8-23', minute='5,35')
+
+
+if __name__ == '__main__':
+    currency_task_100()

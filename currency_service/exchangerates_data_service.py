@@ -37,22 +37,23 @@ def get_currency_data(source: str, cur_list: list) -> list:
 
     response = requests.request("GET", url, headers=headers)
     response = response.json()
-    print(response)
     timestamp = response['timestamp']
     base = get_currency_by_name(str(response['base']))
 
     rates: dict = response['rates']
 
-    keys = get_currency_by_names(rates.keys())
+    keys: list = get_currency_by_names(list(rates.keys()))
+    print(keys)
+    for key, value in rates.items():
+        current_cur = None
+        for cur in keys:
+            if cur.name == key:
+                current_cur = cur
 
-    for c, r in rates.items():
-        name = ""
-        for n in keys:
-            if n.name == c.removeprefix(base.name):
-                name = n
         result.append(CurrencyData(timestamp=timestamp,
-                                   rate=float(r),
-                                   currency=name,
+                                   rate=float(value),
+                                   currency=current_cur,
                                    source_currency=base
                                    ))
+
     return result
