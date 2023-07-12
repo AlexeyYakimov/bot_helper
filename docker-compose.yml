@@ -1,18 +1,13 @@
 version: "3.9"
 services:
-  ngrok:
-    network_mode: "host"
-    image: ngrok/ngrok:latest
-    restart: always
+  localtunnel:
+    image: efrecon/localtunnel
     command:
-      - "start"
-      - "--all"
-      - "--config"
-      - "/etc/ngrok.yml"
+      lt --local-host korona-service --subdomain $PROXY_DOMAIN --port 80
+    links:
+      - korona-service
     environment:
-      - NGROK_AUTHTOKEN
-    volumes:
-      - ./ngrok.yml:/etc/ngrok.yml
+      - PROXY_DOMAIN
   korona-service:
     build: .
     image: korona-service:latest
@@ -22,14 +17,10 @@ services:
       - TZ
       - FLASK_SERVER_PORT
       - TELEGRAM_TOKEN
-      - NGROK_API_TOKEN
       - STORMGLASS_TOKEN
       - ALERT_TOKEN
       - AQI_TOKEN
       - API_TOKEN
       - API_LAYER_TOKEN
-    ports:
-      - 80:80
+      - PROXY_DOMAIN
     restart: always
-    depends_on:
-      - ngrok

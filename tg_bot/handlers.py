@@ -1,8 +1,8 @@
 from tg_bot import bot, keyboards
 
 
-def start_handler(tbot, message):
-    tbot.send_message(chat_id=message.chat.id, text="Hi registered", reply_markup=keyboards.get_reply_keyboard())
+def start_handler(message):
+    bot.send_message(chat_id=message.chat.id, data="Hi registered", keyboard=keyboards.get_reply_keyboard())
 
 
 def all_text_handler(message):
