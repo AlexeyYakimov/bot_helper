@@ -1,5 +1,6 @@
 import logging
 
+from apscheduler.events import EVENT_JOB_EXECUTED, EVENT_JOB_ERROR
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask import Flask
 
@@ -22,7 +23,16 @@ def add_task(func, hours, minute):
                       replace_existing=True)
 
 
+def my_listener(event):
+    if event.exception:
+        print('The job crashed :(')
+        print(f"{scheduler.get_jobs()}")
+    else:
+        print('The job worked :)')
+
+
 def scheduler_run():
+    scheduler.add_listener(my_listener, EVENT_JOB_EXECUTED | EVENT_JOB_ERROR)
     scheduler.start()
 
 

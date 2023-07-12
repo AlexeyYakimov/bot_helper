@@ -6,7 +6,6 @@ _token_dict = {}
 
 class Token(Enum):
     TELEGRAM = 'TELEGRAM_TOKEN'
-    NGROK = 'NGROK_API_TOKEN'
     STORMGLASS = 'STORMGLASS_TOKEN'
     ALERT = 'ALERT_TOKEN'
     AQI = 'AQI_TOKEN'
