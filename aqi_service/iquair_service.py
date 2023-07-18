@@ -1,11 +1,12 @@
 import arrow
 import requests
 
+from aqi_service import aqi_utils
 from aqi_service.aqi_utils import get_usaqi_description, AQI
 from in_memory_db.in_memory_data import TZ_CURRENT
 from in_memory_db.token_storage import Token, get_token
 
-url = f"https://api.airvisual.com/v2/city?key={get_token(Token.AQI)}&country=Georgia&state=Ajaria&city=Batumi"
+url = f"https://api.airvisual.com/v2/nearest_city?key={get_token(Token.AQI)}&lat={aqi_utils.lat}&lon={aqi_utils.lng}"
 
 last_request = arrow.now(TZ_CURRENT)
 cached_value = 0

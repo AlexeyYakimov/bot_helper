@@ -1,5 +1,7 @@
 from enum import Enum
 
+lat = 41.6410
+lng = 41.6142
 
 class AQI:
     class Quality(Enum):
