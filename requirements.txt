@@ -1,6 +1,5 @@
 Flask
 requests
-pyTelegramBotAPI
 telebot
 arrow
 APScheduler

@@ -1,6 +1,6 @@
 import logging
 
-from apscheduler.events import EVENT_JOB_EXECUTED, EVENT_JOB_ERROR
+from apscheduler.events import EVENT_JOB_EXECUTED, EVENT_JOB_ERROR, EVENT_JOB_MAX_INSTANCES
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask import Flask
 
@@ -32,7 +32,7 @@ def my_listener(event):
 
 
 def scheduler_run():
-    scheduler.add_listener(my_listener, EVENT_JOB_EXECUTED | EVENT_JOB_ERROR)
+    scheduler.add_listener(my_listener, EVENT_JOB_EXECUTED | EVENT_JOB_ERROR | EVENT_JOB_MAX_INSTANCES)
     scheduler.start()
 
 
