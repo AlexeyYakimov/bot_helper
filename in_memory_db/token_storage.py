@@ -9,7 +9,7 @@ class Token(Enum):
     STORMGLASS = 'STORMGLASS_TOKEN'
     ALERT = 'ALERT_TOKEN'
     AQI = 'AQI_TOKEN'
-    API = 'API_TOKEN',
+    API = 'API_TOKEN'
     API_LAYER = 'API_LAYER_TOKEN'
 
 
