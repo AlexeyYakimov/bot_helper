@@ -9,7 +9,7 @@ services:
     environment:
       - PROXY_DOMAIN
     healthcheck:
-      test: ["CMD" "curl" "-H" "Authorization: $API_TOKEN" "https://$PROXY_DOMAIN.loca.lt/tech/ping"]
+      test: ["CMD", "curl", "-H", "Authorization: $API_TOKEN", "https://$PROXY_DOMAIN.loca.lt/tech/ping"]
       interval: 120s
       timeout: 25s
       retries: 3
