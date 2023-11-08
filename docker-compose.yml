@@ -29,5 +29,4 @@ services:
       - PROXY_DOMAIN
     restart: always
     depends_on:
-      -localtunnel:
-         condition: service_healthy
+      - localtunnel
