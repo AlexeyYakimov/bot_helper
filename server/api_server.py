@@ -12,9 +12,9 @@ server_api_routes = Blueprint('server_api', __name__, url_prefix='/tech')
 @server_api_routes.get("/ping")
 def ping_server():
     if request.headers['Authorization'] == get_token(Token.API):
-        return 200
+        return {"status": "OK"}, 200
     else:
-        return 401
+        return {"status": "need token"}, 401
 
 
 @flask_app.after_request
