@@ -8,9 +8,9 @@ services:
       - PROXY_DOMAIN
     healthcheck:
       test: ["CMD", "curl", "-f", "-H", "Authorization: $API_TOKEN", "https://$PROXY_DOMAIN.loca.lt/tech/ping"]
-      interval: 120s
-      timeout: 25s
-      retries: 3
+      interval: 10m
+      timeout: 30s
+      retries: 1
     restart: always
   korona-service:
     build: .
