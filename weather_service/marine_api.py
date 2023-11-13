@@ -14,13 +14,15 @@ url = 'https://api.stormglass.io/v2/weather/point'
 lat = 41.6410
 lng = 41.6142
 
+_hours_key = 'hours'
+
 
 def get_formatted_tg_message() -> str:
     return convert_data_to_str(get_data_for_three_hours())
 
 
 def get_current_weather() -> dict:
-    data = get_data()['hours']
+    data = get_data()[_hours_key]
     result = {}
     for hour in data:
         weather_time = arrow.get(hour['time'])
@@ -35,7 +37,7 @@ def get_current_weather() -> dict:
 def get_data_for_three_hours() -> list:
     start_time = arrow.now(tz.TZ_CURRENT).floor('hours').timestamp()
     end_time = arrow.now(tz.TZ_CURRENT).floor('hours').shift(hours=shift_time).timestamp()
-    data = get_data()['hours']
+    data = get_data()[_hours_key]
 
     hour_list = []
 
@@ -45,6 +47,15 @@ def get_data_for_three_hours() -> list:
             hour_list.append(map_to_weather_data(hour))
 
     return hour_list
+
+
+def get_data_for_all_day() -> list:
+    data = get_data()[_hours_key]
+    result = []
+    for hour in data:
+        result.append(map_to_weather_data(hour))
+
+    return result
 
 
 def get_data() -> dict:
@@ -93,11 +104,11 @@ def get_data() -> dict:
     else:
         response = temp
 
-    for time in response['hours']:
+    for time in response[_hours_key]:
         time_ge = arrow.get(time['time']).to(tz.TZ_CURRENT)
         time['time'] = time_ge.format('YYYY-MM-DD HH:mm:ssZZ')
 
-    return response
+    return test.data
 
 
 def convert_data_to_str(data: list) -> str:
