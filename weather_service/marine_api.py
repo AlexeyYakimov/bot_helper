@@ -108,7 +108,7 @@ def get_data() -> dict:
         time_ge = arrow.get(time['time']).to(tz.TZ_CURRENT)
         time['time'] = time_ge.format('YYYY-MM-DD HH:mm:ssZZ')
 
-    return test.data
+    return response
 
 
 def convert_data_to_str(data: list) -> str:
