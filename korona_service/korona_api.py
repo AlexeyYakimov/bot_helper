@@ -26,7 +26,7 @@ query_parameters = {
 
 locale.setlocale(locale.LC_ALL, 'ru_RU.UTF-8')
 
-max_lari_cap = 4950
+max_lari_cap = 1000000
 
 
 def _get_korona_data(amount: int) -> KoronaData:

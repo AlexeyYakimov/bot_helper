@@ -6,7 +6,7 @@ from tg_bot.keyboards import message_match_button
 
 
 def money_handler(message):
-    bot.send_message(message.chat.id, get_pretty_print_data(4000), keyboard=bot.get_reply_keyboard())
+    bot.send_message(message.chat.id, get_pretty_print_data(3000), keyboard=bot.get_reply_keyboard())
 
 
 def custom_amount_handler(message):
